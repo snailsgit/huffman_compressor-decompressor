@@ -16,7 +16,7 @@ compressfile_size=""
 decompressfile_size=""
 
 # adding a background image
-bg_img=Image.open("bg.jpg")
+bg_img=Image.open("images/bg.jpg")
 bg_img=bg_img.resize((600,350),Image.ANTIALIAS)
 bg_img=ImageTk.PhotoImage(bg_img)
 
