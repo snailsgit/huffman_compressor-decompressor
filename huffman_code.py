@@ -2,14 +2,14 @@ import heapq	 #for priority queue
 import os		 #for file operations 
 
 
-class HuffmanCoding:
+class mainHuffman:
 	def __init__(self, path):
 		self.path = path	#used in compressing and decompressing 
 		self.heap = []		#for storing frequencies of each character
 		self.codes = {}		#encoded code for each character
 		self.reverse_mapping_codes = {}
 
-	class HeapNode:
+	class heapNode:
 		def __init__(self, data, freq):
 			self.data = data
 			self.freq = freq
@@ -39,17 +39,17 @@ class HuffmanCoding:
 #make priority queue for storing characters according to freq table
 	def make_heap(self, frequency):
 		for key in frequency:
-			node = self.HeapNode(key, frequency[key])
+			node = self.heapNode(key, frequency[key])
 			heapq.heappush(self.heap, node)
 
 
 #build the huffman tree
-	def merge_nodes(self):
+	def mergeAllNodes(self):
 		while(len(self.heap)>1):	#while only the root is left in the tree
 			node1 = heapq.heappop(self.heap)
 			node2 = heapq.heappop(self.heap)
 
-			merged = self.HeapNode(None, node1.freq + node2.freq)
+			merged = self.heapNode(None, node1.freq + node2.freq)
 			merged.left = node1
 			merged.right = node2
 
@@ -57,7 +57,7 @@ class HuffmanCoding:
 
 
 #recursively get the codes for all characters
-	def make_codes_helper(self, root, current_code):
+	def helper(self, root, current_code):
 		if(root == None):
 			return
 
@@ -66,15 +66,15 @@ class HuffmanCoding:
 			self.reverse_mapping_codes[current_code] = root.data
 			return
 
-		self.make_codes_helper(root.left, current_code + "0")
-		self.make_codes_helper(root.right, current_code + "1")
+		self.helper(root.left, current_code + "0")
+		self.helper(root.right, current_code + "1")
 
 
 #make codes for each character
 	def make_codes(self):
 		root = heapq.heappop(self.heap)
 		current_code = ""
-		self.make_codes_helper(root, current_code)
+		self.helper(root, current_code)
 
 
 #convert input text to compressed text
@@ -87,11 +87,11 @@ class HuffmanCoding:
 
 #add padding to code to make it multiple of 8 to convert it inot bytes
 	def pad_encoded_text(self, encoded_text):
-		extra_padding = 8 - len(encoded_text) % 8
-		for i in range(extra_padding):
+		padding_needed = 8 - len(encoded_text) % 8
+		for i in range(padding_needed):
 			encoded_text += "0"
 					#convert into 8 bytes
-		padded_info = "{0:08b}".format(extra_padding)	 #stored so that we can know how many padding was added
+		padded_info = "{0:08b}".format(padding_needed)	 #stored so that we can know how many padding was added
 		encoded_text = padded_info + encoded_text
 		return encoded_text
 
@@ -123,7 +123,7 @@ class HuffmanCoding:
 
 			frequency = self.freq_table(text)
 			self.make_heap(frequency)
-			self.merge_nodes()
+			self.mergeAllNodes()
 			self.make_codes()
 
 			encoded_text = self.get_encoded_text(text)
@@ -139,10 +139,10 @@ class HuffmanCoding:
 
 	def remove_padding(self, padded_encoded_text):
 		padded_info = padded_encoded_text[:8]
-		extra_padding = int(padded_info, 2)
+		padding_needed = int(padded_info, 2)
 
 		padded_encoded_text = padded_encoded_text[8:] 
-		encoded_text = padded_encoded_text[:-1*extra_padding]
+		encoded_text = padded_encoded_text[:-1*padding_needed]
 
 		return encoded_text
 
