@@ -5,7 +5,7 @@ from tkinter import filedialog as fd
 from tkinter.messagebox import showinfo
 
 
-from huffman_code import HuffmanCoding
+from huffman_code import mainHuffman
 import os
 # create the root window
 root = tk.Tk()
@@ -42,7 +42,7 @@ def select_file():
     )
 
     global h
-    h=HuffmanCoding(filename)
+    h=mainHuffman(filename)
     content=open(filename)
     #adding a text widget to show content of a file
     data = content.read()
